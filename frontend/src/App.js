@@ -1,30 +1,29 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Sidebar from "./component/sidebar";
-import Swal from "sweetalert2";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ChooseRole from "./component/chooseRole";
 import Login from "./component/login";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import DashboardLayout from "./component/dashboardLayout";
 import ListMenu from "./component/listMenu";
+import Home from "./component/home";
+import Signup from "./component/signup";
+import Laporan from "./component/laporan";
 
 function App() {
-  // const click = () => {
-  //   Swal.fire("SweetAlert2 is working!");
-  // };
   return (
-    // <Sidebar/>
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<ChooseRole />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Sidebar />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ChooseRole />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Bungkus rute yang memerlukan Sidebar dengan DashboardLayout */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Home />} />
           <Route path="/menu" element={<ListMenu />} />
-        </Routes>
-      </BrowserRouter>
-      {/* <button onClick={click}>swal</button> */}
-      {/* <ChooseRole /> */}
-    </>
+          <Route path="/laporan" element={<Laporan />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
