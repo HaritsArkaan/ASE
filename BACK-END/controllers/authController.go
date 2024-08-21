@@ -4,8 +4,10 @@ import (
 	"ASE/BACK-END/models"
 	"fmt"
 	"net/http"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -14,12 +16,12 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type RegisterInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Role     string `json:"role" binding:"required"`
-}
+// type RegisterInput struct {
+// 	Username string `json:"username" binding:"required"`
+// 	Password string `json:"password" binding:"required"`
+// 	Email    string `json:"email" binding:"required"`
+// 	Role     string `json:"role" validate:"required,oneof=Kasir Tenant" binding:"required"`
+// }
 
 // LoginUser godoc
 // @Summary Login as as user.
@@ -51,9 +53,15 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	if err := db.Where("username = ?", u.Username).First(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
 	user := map[string]string{
 		"username": u.Username,
 		"email":    u.Email,
+		"Role":     u.Role,
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "login success", "user": user, "token": token})
@@ -62,39 +70,71 @@ func Login(c *gin.Context) {
 
 // Register godoc
 // @Summary Register a user.
-// @Description registering a user from public access.
+// @Description Registering a user from public access.
 // @Tags Auth
-// @Param Body body RegisterInput true "the body to register a user"
+// @Accept multipart/form-data
+// @Param Username formData string true "Username"
+// @Param Email formData string true "Email"
+// @Param Password formData string true "Password"
+// @Param Role formData string true "Role"
+// @Param Pfp formData file true "Pfp"
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /register [post]
 func Register(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	var input RegisterInput
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	u := models.User{}
-
-	u.Username = input.Username
-	u.Email = input.Email
-	u.Password = input.Password
-
-	_, err := u.SaveUser(db)
-
+	// Get the file from the form data
+	file, err := c.FormFile("Pfp")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user := map[string]string{
-		"username": input.Username,
-		"email":    input.Email,
+	// Define the path where the file will be saved, using UUID for uniqueness
+	fileName := uuid.New().String() + filepath.Ext(file.Filename)
+	filePath := filepath.Join("Storage_Photo", fileName)
+
+	// Validate input data using struct tags
+	var user models.User
+	user.Email = c.PostForm("Email")
+	user.Username = c.PostForm("Username")
+	user.Password = c.PostForm("Password")
+	user.Role = c.PostForm("Role")
+
+	user.Pfp = fileName
+	user.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
+
+	// Save the file to the defined path
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "registration success", "user": user})
+	db := c.MustGet("db").(*gorm.DB)
+	_, err = user.SaveUser(db)
 
+	// Response data
+	users := map[string]string{
+		"username": user.Username,
+		"email":    user.Email,
+		"role":     user.Role,
+		"profile":  user.Pfp,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "registration success", "user": users})
+}
+
+// GetAllUser godoc
+// @Summary Get all User.
+// @Description Get a list of User.
+// @Tags Auth
+// @Produce json
+// @Success 200 {object} []models.User
+// @Router /listUser [get]
+func GetAllUser(c *gin.Context) {
+	// get db from gin context
+	db := c.MustGet("db").(*gorm.DB)
+	var names []models.User
+	db.Find(&names)
+
+	c.JSON(http.StatusOK, gin.H{"data": names})
 }
