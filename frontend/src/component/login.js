@@ -15,6 +15,25 @@ const Login = () => {
     chpage();
   };
 
+  const loginPopup = () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Signed in successfully",
+    });
+    chpage();
+  };
+
   const chpage = () => {
     navigate("/dashboard");
   };
@@ -80,7 +99,7 @@ const Login = () => {
           </div>
           <div>
             <button
-              onClick={popup}
+              onClick={loginPopup}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Popup from "./popup";
+import axios from "axios";
 
 const ListMenu = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -7,6 +8,35 @@ const ListMenu = () => {
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/menus")
+      .then((res) => {
+        setData([...res.data.data]);
+      })
+      .catch((err) => {});
+  }, []);
+
+  const formatRupiah = (angka, prefix) => {
+    let number_string = angka.toString().replace(/[^,\d]/g, "");
+    let split = number_string.split(",");
+    let sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+      let separator = sisa ? "." : "";
+      rupiah += separator + ribuan.join(".");
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+
+    return prefix == null ? rupiah : rupiah ? "Rp " + rupiah : "";
+  };
+
   return (
     <>
       <div className="mt-16 ml-64">
@@ -26,48 +56,31 @@ const ListMenu = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className=" border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  <button>
-                    <img src="./img/editMenuButton.png" className="w-6" />
-                  </button>
-                  <img
-                    src="https://pnghq.com/wp-content/uploads/aqua-png-free-image-png-16461-768x768.png"
-                    alt="gambar menu"
-                    className="w-16 h-16 "
-                  />
-                  Aqua 600ml
-                </th>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  Rp. 10.000
-                </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  90
-                </td>
-              </tr>
-              <tr className=" border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Microsoft Surface Pro
-                </th>
-                <td className="px-6 py-4">White</td>
-                <td className="px-6 py-4">Laptop PC</td>
-              </tr>
-              <tr className=" dark:bg-gray-800">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Magic Mouse 2
-                </th>
-                <td className="px-6 py-4">Black</td>
-                <td className="px-6 py-4">Accessories</td>
-              </tr>
+              {data !== null &&
+                data.map((data, index) => (
+                  <tr className=" border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th
+                      scope="row"
+                      className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      <button className="mx-4">
+                        <img src="./img/editMenuButton.png" className="w-6" />
+                      </button>
+                      <img
+                        src={data.imageURL}
+                        alt="gambar menu"
+                        className="w-16 h-16 rounded-md mr-4"
+                      />
+                      {data.name}
+                    </th>
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {formatRupiah(data.amount, "Rp ")}
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {data.quantity}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
