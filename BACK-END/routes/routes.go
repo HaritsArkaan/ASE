@@ -19,6 +19,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		c.Set("db", db)
 	})
 
+	r.Use(middlewares.CorsMiddleware())
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 	r.GET("/listUser", controllers.GetAllUser)
