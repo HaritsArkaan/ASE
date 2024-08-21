@@ -43,6 +43,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	menuMiddlewareRoute.PATCH("/:id", controllers.UpdateMenu)
 	menuMiddlewareRoute.DELETE("/:id", controllers.DeleteMenu)
 
+	r.GET("/laporan", controllers.GetAllLaporan)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Static("/Storage_Photo", "./Storage_Photo")

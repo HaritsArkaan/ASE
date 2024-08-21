@@ -237,6 +237,28 @@ func DeleteOrder(c *gin.Context) {
 		return
 	}
 
+	var menu models.Menu
+	//get menu id
+	if err := db.Where("id = ?", order.MenuID).First(&menu).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+	var idBaru uint = order.ID
+	// Buat laporan dari order yang akan dihapus
+	laporan := models.Laporan{
+		OrderID:          idBaru,
+		Tenant:           menu.Tenant,
+		Pesanan:          menu.Name,
+		MetodePembayaran: "Tunai", // Ubah sesuai kebutuhan
+		Total:            order.Amount,
+	}
+
+	// Simpan laporan ke database
+	if err := db.Create(&laporan).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create laporan"})
+		return
+	}
+
 	db.Delete(&order)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})

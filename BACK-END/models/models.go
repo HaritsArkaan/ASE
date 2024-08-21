@@ -44,6 +44,16 @@ type (
 		Menu   Menu `json:"-"`
 		User   User `json:"-"`
 	}
+
+	// Laporan
+	Laporan struct {
+		ID               uint   `gorm:"primaryKey;autoIncrement:true"`
+		OrderID          uint   `json:"order_id"`
+		Tenant           string `json:"tenant"`
+		Pesanan          string `json:"pesanan"`
+		MetodePembayaran string `json:"metode_pembayaran"`
+		Total            int    `json:"total"`
+	}
 )
 
 func VerifyPassword(password, hashedPassword string) error {

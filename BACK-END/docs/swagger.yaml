@@ -23,6 +23,21 @@ definitions:
       user_id:
         type: integer
     type: object
+  models.Laporan:
+    properties:
+      id:
+        type: integer
+      metode_pembayaran:
+        type: string
+      order_id:
+        type: integer
+      pesanan:
+        type: string
+      tenant:
+        type: string
+      total:
+        type: integer
+    type: object
   models.Menu:
     properties:
       amount:
@@ -83,6 +98,21 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
+  /laporan:
+    get:
+      description: Get a list of Laporan.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Laporan'
+            type: array
+      summary: Get all Laporan.
+      tags:
+      - Laporan
   /listUser:
     get:
       description: Get a list of User.

@@ -24,6 +24,29 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/laporan": {
+            "get": {
+                "description": "Get a list of Laporan.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get all Laporan.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Laporan"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/listUser": {
             "get": {
                 "description": "Get a list of User.",
@@ -650,6 +673,29 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Laporan": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "metode_pembayaran": {
+                    "type": "string"
+                },
+                "order_id": {
+                    "type": "integer"
+                },
+                "pesanan": {
+                    "type": "string"
+                },
+                "tenant": {
+                    "type": "string"
+                },
+                "total": {
                     "type": "integer"
                 }
             }
