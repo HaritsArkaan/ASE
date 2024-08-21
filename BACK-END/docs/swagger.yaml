@@ -1,4 +1,474 @@
+definitions:
+  controllers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.OrderInput:
+    properties:
+      menu_name:
+        type: string
+      user_name:
+        type: string
+    type: object
+  controllers.OrderInputId:
+    properties:
+      menu_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.Menu:
+    properties:
+      amount:
+        type: integer
+      id:
+        type: integer
+      imageURL:
+        type: string
+      name:
+        type: string
+      photo:
+        type: string
+      quantity:
+        type: integer
+      tenant:
+        type: string
+    type: object
+  models.Order:
+    properties:
+      amount:
+        type: integer
+      id:
+        type: integer
+      menu_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      imageURL:
+        type: string
+      password:
+        type: string
+      pfp:
+        type: string
+      role:
+        enum:
+        - Kasir
+        - Tenant
+        type: string
+      username:
+        type: string
+    required:
+    - role
+    type: object
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /listUser:
+    get:
+      description: Get a list of User.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: Get all User.
+      tags:
+      - Auth
+  /login:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles.
+      parameters:
+      - description: the body to login a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login as as user.
+      tags:
+      - Auth
+  /menus:
+    get:
+      description: Get a list of Menu.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Menu'
+            type: array
+      summary: Get all Menu.
+      tags:
+      - Menu
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creating a new Menu.
+      parameters:
+      - description: Photo menu
+        in: formData
+        name: Photo
+        required: true
+        type: file
+      - description: Nama Menu
+        in: formData
+        name: Name
+        required: true
+        type: string
+      - description: Amount
+        in: formData
+        name: Amount
+        required: true
+        type: integer
+      - description: Nama Tenant
+        in: formData
+        name: Tenant
+        required: true
+        type: string
+      - description: Quantity
+        in: formData
+        name: Quantity
+        required: true
+        type: integer
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Menu'
+      security:
+      - BearerToken: []
+      summary: Create New Menu.
+      tags:
+      - Menu
+  /menus/{id}:
+    delete:
+      description: Delete a Menu by id.
+      parameters:
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one Menu.
+      tags:
+      - Menu
+    patch:
+      description: Update Menu by id.
+      parameters:
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Photo menu
+        in: formData
+        name: Photo
+        required: true
+        type: file
+      - description: Nama Menu
+        in: formData
+        name: Name
+        required: true
+        type: string
+      - description: Amount
+        in: formData
+        name: Amount
+        required: true
+        type: integer
+      - description: Nama Tenant
+        in: formData
+        name: Tenant
+        required: true
+        type: string
+      - description: Quantity
+        in: formData
+        name: Quantity
+        required: true
+        type: integer
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Menu'
+      security:
+      - BearerToken: []
+      summary: Update Menu.
+      tags:
+      - Menu
+  /menus/id/{id}:
+    get:
+      description: Get an Menu by id.
+      parameters:
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Menu'
+      summary: Get Menu.
+      tags:
+      - Menu
+  /menus/name/{name}:
+    get:
+      description: Get an id by nama Menu.
+      parameters:
+      - description: Menu Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Menu'
+      summary: Get Id.
+      tags:
+      - Menu
+  /order:
+    get:
+      description: Get a list of Order.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+      summary: Get all Order.
+      tags:
+      - Order
+    post:
+      description: Creating a new Order.
+      parameters:
+      - description: the body to create a new Order
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.OrderInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - BearerToken: []
+      summary: Create New Order.
+      tags:
+      - Order
+  /order/{id}:
+    delete:
+      description: Delete a Order by id.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one Order.
+      tags:
+      - Order
+    patch:
+      description: Update Order by id.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'the body to update '
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.OrderInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - BearerToken: []
+      summary: Update Order.
+      tags:
+      - Order
+  /order/id/{id}:
+    patch:
+      description: Update Order by id.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'the body to update '
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.OrderInputId'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - BearerToken: []
+      summary: Update Order.
+      tags:
+      - Order
+  /register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Registering a user from public access.
+      parameters:
+      - description: Username
+        in: formData
+        name: Username
+        required: true
+        type: string
+      - description: Email
+        in: formData
+        name: Email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: Password
+        required: true
+        type: string
+      - description: Role
+        in: formData
+        name: Role
+        required: true
+        type: string
+      - description: Pfp
+        in: formData
+        name: Pfp
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a user.
+      tags:
+      - Auth
 swagger: "2.0"
