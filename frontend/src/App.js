@@ -12,8 +12,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ChooseRole />} />
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/" element={<ChooseRole />} /> */}
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
         {/* Bungkus rute yang memerlukan Sidebar dengan DashboardLayout */}

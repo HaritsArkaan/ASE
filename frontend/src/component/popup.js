@@ -8,7 +8,7 @@ const Popup = ({ show, onClose }) => {
       <div className="bg-white rounded-lg p-8 w-1/2 relative">
         <h2 className="text-blue-500 font-bold text-xl mb-4">Tambah Menu</h2>
         <button
-          className="absolute top-2 right-2 text-gray-500"
+          className="absolute top-2 text-2xl right-4 text-gray-500"
           onClick={onClose}
         >
           &times;
