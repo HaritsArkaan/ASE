@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const Home = () => {
   const [orders, setOrders] = useState([]);
@@ -11,9 +12,15 @@ const Home = () => {
   const handleDelete = (event) => {
     let ID = parseInt(event.target.value);
 
-    axios.delete(`http://localhost:8080/order/${ID}`).then((res) => {
-      setFetchStatus(true);
-    });
+    axios
+      .delete(`http://localhost:8080/order/${ID}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        setFetchStatus(true);
+      });
   };
 
   useEffect(() => {
@@ -33,7 +40,7 @@ const Home = () => {
     };
 
     fetchData();
-  }, []);
+  }, [[fetchStatus, setFetchStatus]]);
 
   if (!orders.length || !menus.length || !users.length)
     return <div>Loading...</div>;
@@ -59,7 +66,7 @@ const Home = () => {
               />
               <div className="w-2/3 p-2">
                 <h1 className="text-gray-900 font-bold text-xl">
-                  ID-Pesanan: {order.user_id}
+                  ID-Pesanan: {order.ID}
                 </h1>
                 <h2 className="text-gray-900 font-bold text-lg">{menu.name}</h2>
                 <div className="item-center mt-2 text-gray-500">
