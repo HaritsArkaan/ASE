@@ -23,7 +23,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 	r.GET("/listUser", controllers.GetAllUser)
-	r.GET("/listUser/:id", controllers.GetUserById)
+	r.GET("/listUser/id/:id", controllers.GetUserById)
 
 	r.GET("/order", controllers.GetAllOrder)
 

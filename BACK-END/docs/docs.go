@@ -70,6 +70,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/listUser/id/{id}": {
+            "get": {
+                "description": "Get an User by id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get User.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Logging in to get jwt token to access admin or user api by roles.",
@@ -680,6 +709,9 @@ const docTemplate = `{
         "models.Laporan": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
