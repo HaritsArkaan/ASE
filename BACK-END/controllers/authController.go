@@ -138,3 +138,24 @@ func GetAllUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": names})
 }
+
+// GetUserById godoc
+// @Summary Get User.
+// @Description Get an User by id.
+// @Tags Auth
+// @Produce json
+// @Param id path string true "user id"
+// @Success 200 {object} models.User
+// @Router /listUser/id/{id} [get]
+func GetUserById(c *gin.Context) {
+	var user models.User
+
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+
+}
