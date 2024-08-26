@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"ASE/BACK-END/models"
 
@@ -251,6 +252,7 @@ func DeleteOrder(c *gin.Context) {
 		Pesanan:          menu.Name,
 		MetodePembayaran: "Tunai", // Ubah sesuai kebutuhan
 		Total:            order.Amount,
+		CreatedAt:        time.Now(),
 	}
 
 	// Simpan laporan ke database

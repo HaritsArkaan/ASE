@@ -3,6 +3,7 @@ package models
 import (
 	"html"
 	"strings"
+	"time"
 
 	"ASE/BACK-END/utils/token"
 
@@ -47,12 +48,13 @@ type (
 
 	// Laporan
 	Laporan struct {
-		ID               uint   `gorm:"primaryKey;autoIncrement:true"`
-		OrderID          uint   `json:"order_id"`
-		Tenant           string `json:"tenant"`
-		Pesanan          string `json:"pesanan"`
-		MetodePembayaran string `json:"metode_pembayaran"`
-		Total            int    `json:"total"`
+		ID               uint      `gorm:"primaryKey;autoIncrement:true"`
+		OrderID          uint      `json:"order_id"`
+		Tenant           string    `json:"tenant"`
+		Pesanan          string    `json:"pesanan"`
+		MetodePembayaran string    `json:"metode_pembayaran"`
+		Total            int       `json:"total"`
+		CreatedAt        time.Time `json:"created_at"`
 	}
 )
 
