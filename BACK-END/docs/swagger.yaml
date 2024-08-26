@@ -149,6 +149,25 @@ paths:
       summary: Get User.
       tags:
       - Auth
+  /listUser/username/{username}:
+    get:
+      description: Get an User by Username.
+      parameters:
+      - description: user username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Get User.
+      tags:
+      - Auth
   /login:
     post:
       description: Logging in to get jwt token to access admin or user api by roles.

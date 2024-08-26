@@ -24,6 +24,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	r.POST("/login", controllers.Login)
 	r.GET("/listUser", controllers.GetAllUser)
 	r.GET("/listUser/id/:id", controllers.GetUserById)
+	r.GET("/listUser/username/:username", controllers.GetUserByUsername)
 
 	r.GET("/order", controllers.GetAllOrder)
 

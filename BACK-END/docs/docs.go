@@ -99,6 +99,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/listUser/username/{username}": {
+            "get": {
+                "description": "Get an User by Username.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get User.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Logging in to get jwt token to access admin or user api by roles.",
