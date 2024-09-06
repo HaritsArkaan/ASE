@@ -4,66 +4,104 @@ import Cookies from "js-cookie";
 
 const Popup = ({ show, onClose }) => {
   const [input, setInput] = useState({
-    photo: "",
-    name: "",
-    amount: 0,
-    quantity: 0,
-    tenant: "",
+    Photo: "",
+    Name: "",
+    Amount: 0,
+    Quantity: 0,
+    Tenant: "",
   });
+
+  const [currentID, setCurrentID] = useState(-1);
 
   const handleInput = (event) => {
     let name = event.target.name;
-    let value =
-      event.target.type === "file" ? event.target.files[0] : event.target.value;
-    setInput({ ...input, [name]: value });
+    let value = event.target.value;
+
+    if (name === "Photo") {
+      setInput({ ...input, [name]: event.target.files[0] });
+    } else {
+      setInput({ ...input, [name]: value });
+    }
   };
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    let { photo, name, amount, quantity, tenant } = input;
-    // const formData = new FormData();
-    // formData.append("photo", photo);
-    // formData.append("name", name);
-    // formData.append("amount", amount);
-    // formData.append("quantity", quantity);
-    // formData.append("tenant", tenant);
-    axios
-      .post(
-        "http://localhost:8080/menus",
-        { photo, name, amount, quantity, tenant },
-        {
+
+    let { Photo, Name, Amount, Quantity, Tenant } = input;
+    const formData = new FormData();
+    formData.append("Photo", Photo);
+    formData.append("Name", Name);
+    formData.append("Amount", Amount);
+    formData.append("Quantity", Quantity);
+    formData.append("Tenant", Tenant);
+
+    if (currentID === -1) {
+      axios
+        .post("http://localhost:8080/menus", formData, {
           headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${Cookies.get("token")}`,
           },
-          redirect: "follow",
-        }
-      )
+        })
+        .then((res) => {
+          alert("Menu Added");
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .put(`http://localhost:8080/menus/${currentID}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        })
+        .then((res) => {
+          alert("Menu Updated");
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    setCurrentID(-1);
+  };
+
+  const handleUpdate = (e) => {
+    let id = parseInt(e.target.value);
+    setCurrentID(id);
+    axios
+      .get(`http://localhost:8080/menus/id/${id}`)
       .then((res) => {
-        console.log(res);
+        let data = res.data;
+        setInput({
+          Photo: data.Photo,
+          Name: data.Name,
+          Amount: data.Amount,
+          Quantity: data.Quantity,
+          Tenant: data.Tenant,
+        });
       })
       .catch((err) => {
-        if (err.response) {
-          console.log("Error data:", err.response.data);
-          console.log("Error status:", err.response.status);
-          console.log("Error headers:", err.response.headers);
-        } else if (err.request) {
-          console.log("Error request:", err.request);
-        } else {
-          console.log("Error message:", err.message);
-        }
+        console.log(err);
       });
   };
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    console.log(file);
-    reader.onloadend = () => {
-      const base64String = reader.result.replace(/^data:.+;base64,/, "");
-      setInput((prevInput) => ({ ...prevInput, photo: base64String }));
-    };
-    reader.readAsDataURL(file);
-    console.log(file);
+    // const file = event.target.files[0];
+    // const reader = new FileReader();
+    // console.log(file);
+    // reader.onloadend = () => {
+    //   const base64String = reader.result.replace(/^data:.+;base64,/, "");
+    //   setInput((prevInput) => ({ ...prevInput, photo: base64String }));
+    // };
+    // reader.readAsDataURL(file);
+    // console.log(file);
+    setSelectedFile(event.target.files[0]);
   };
   const [image, setImage] = useState("");
   const handleImage = (e) => {
@@ -91,9 +129,9 @@ const Popup = ({ show, onClose }) => {
             <input
               className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
               aria-describedby="user_avatar_help"
-              name="photo"
-              id="photo"
-              onChange={handleFileChange}
+              name="Photo"
+              id="Photo"
+              onChange={handleInput}
               type="file"
             />
           </div>
@@ -103,8 +141,8 @@ const Popup = ({ show, onClose }) => {
             </label>
             <input
               type="text"
-              name="name"
-              value={input.name}
+              name="Name"
+              value={input.Name}
               onChange={handleInput}
               className="w-full px-3 py-2 border rounded"
               required
@@ -116,8 +154,8 @@ const Popup = ({ show, onClose }) => {
             </label>
             <input
               type="text"
-              name="tenant"
-              value={input.tenant}
+              name="Tenant"
+              value={input.Tenant}
               onChange={handleInput}
               className="w-full px-3 py-2 border rounded"
               required
@@ -129,8 +167,8 @@ const Popup = ({ show, onClose }) => {
             </label>
             <input
               type="number"
-              name="amount"
-              value={input.amount}
+              name="Amount"
+              value={input.Amount}
               onChange={handleInput}
               className="w-full px-3 py-2 border rounded"
               required
@@ -142,8 +180,8 @@ const Popup = ({ show, onClose }) => {
             </label>
             <input
               type="number"
-              name="quantity"
-              value={input.quantity}
+              name="Quantity"
+              value={input.Quantity}
               onChange={handleInput}
               className="w-full px-3 py-2 border rounded"
             />

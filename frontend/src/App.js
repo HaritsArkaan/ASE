@@ -7,6 +7,8 @@ import ListMenu from "./component/listMenu";
 import Home from "./component/home";
 import Signup from "./component/signup";
 import Laporan from "./component/laporan";
+import Profile from "./component/profile";
+import Export from "./component/export";
 
 function App() {
   return (
@@ -21,7 +23,9 @@ function App() {
           <Route path="/dashboard" element={<Home />} />
           <Route path="/menu" element={<ListMenu />} />
           <Route path="/laporan" element={<Laporan />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
+        <Route path="/export" element={<Export />} />
       </Routes>
     </BrowserRouter>
   );

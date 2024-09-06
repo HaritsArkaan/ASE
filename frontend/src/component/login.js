@@ -28,7 +28,7 @@ const Login = () => {
         let data = res.data;
         Cookies.set("token", data.token, { expires: 1 });
         navigate("/dashboard");
-        
+        loginPopup();
       })
       .catch((err) => {
         alert("Wrong username or password");

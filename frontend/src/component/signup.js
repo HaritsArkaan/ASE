@@ -5,42 +5,48 @@ import Cookies from "js-cookie";
 
 const Signup = () => {
   const [input, setInput] = useState({
-    username: "",
-    email: "",
-    password: "",
-    role: "",
-    pfp: "",
+    Username: "",
+    Email: "",
+    Password: "",
+    Role: "",
+    Pfp: "",
   });
 
-  let navigate = useNavigate;
+  let navigate = useNavigate();
 
   const handleInput = (event) => {
     let name = event.target.name;
     let value = event.target.value;
-    setInput({ ...input, [name]: value });
+
+    if (name === "Pfp") {
+      setInput({ ...input, [name]: event.target.files[0] });
+    } else {
+      setInput({ ...input, [name]: value });
+    }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    console.log(file);
-    reader.onloadend = () => {
-      const base64String = reader.result.replace(/^data:.+;base64,/, "");
-      setInput((prevInput) => ({ ...prevInput, pfp: base64String }));
-    };
-    reader.readAsDataURL(file);
-  };
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+  //   console.log(file);
+  //   reader.onloadend = () => {
+  //     const base64String = reader.result.replace(/^data:.+;base64,/, "");
+  //     setInput((prevInput) => ({ ...prevInput, Pfp: base64String }));
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
   const handleRegister = (event) => {
     event.preventDefault();
-    let { username, email, password, role, pfp } = input;
+    let { Username, Email, Password, Role, Pfp } = input;
+    console.log(input);
 
     const formData = new FormData();
-    formData.append("username", username);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("role", role);
-    formData.append("pfp", pfp);
+    formData.append("Username", Username);
+    formData.append("Email", Email);
+    formData.append("Password", Password);
+    formData.append("Role", Role);
+    formData.append("Pfp", Pfp);
     axios
       .post("http://localhost:8080/register", formData, {
         headers: {
@@ -52,7 +58,9 @@ const Signup = () => {
         Cookies.set("token", token);
         navigate("/");
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -82,16 +90,16 @@ const Signup = () => {
               <div className="flex gap-4 w-full ">
                 <div className="w-full">
                   <label
-                    htmlFor="username"
+                    htmlFor="Username"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Username
                   </label>
                   <input
                     type="text"
-                    name="username"
-                    id="username"
-                    value={input.username}
+                    name="Username"
+                    id="Username"
+                    value={input.Username}
                     onChange={handleInput}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="John Doe"
@@ -100,16 +108,16 @@ const Signup = () => {
                 </div>
                 <div className="w-full">
                   <label
-                    htmlFor="email"
+                    htmlFor="Email"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Your email
                   </label>
                   <input
                     type="email"
-                    name="email"
-                    id="email"
-                    value={input.email}
+                    name="Email"
+                    id="Email"
+                    value={input.Email}
                     onChange={handleInput}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@company.com"
@@ -120,16 +128,16 @@ const Signup = () => {
               <div className="flex gap-4 w-full ">
                 <div className="w-full">
                   <label
-                    htmlFor="password"
+                    htmlFor="Password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Password
                   </label>
                   <input
                     type="password"
-                    name="password"
-                    id="password"
-                    value={input.password}
+                    name="Password"
+                    id="Password"
+                    value={input.Password}
                     onChange={handleInput}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -138,16 +146,16 @@ const Signup = () => {
                 </div>
                 <div className="w-full">
                   <label
-                    htmlFor="role"
+                    htmlFor="Role"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Role
                   </label>
                   <input
                     type="text"
-                    name="role"
-                    id="role"
-                    value={input.role}
+                    name="Role"
+                    id="Role"
+                    value={input.Role}
                     onChange={handleInput}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
@@ -166,10 +174,10 @@ const Signup = () => {
                   <input
                     className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     aria-describedby="user_avatar_help"
-                    name="pfp"
-                    id="pfp"
+                    name="Pfp"
+                    id="Pfp"
                     type="file"
-                    onChange={handleFileChange}
+                    onChange={handleInput}
                   />
                   <div
                     className="mt-1 text-sm text-gray-500 dark:text-gray-300"

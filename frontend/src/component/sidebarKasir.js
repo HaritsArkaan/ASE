@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const Sidebar = () => {
+const SidebarKasir = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userData, setUserData] = useState({});
   const token = Cookies.get("token");
@@ -78,7 +78,7 @@ const Sidebar = () => {
               <div className="flex items-center">
                 <div className="flex items-center ms-3">
                   <div className="flex ">
-                    <span className="mx-3 text-gray-900 pt-2 font-semibold text-xl dark:text-white">
+                    <span className="mx-3 pt-2 text-gray-900 font-semibold text-xl dark:text-white">
                       {userData.username}
                     </span>
                     <button
@@ -98,7 +98,7 @@ const Sidebar = () => {
                   </div>
                   {userMenuOpen && (
                     <div
-                      className="absolute right-0 z-50 mt-48 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg outline-none dark:bg-gray-700 dark:divide-gray-600"
+                      className="absolute right-0 z-50 mt-64 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg outline-none dark:bg-gray-700 dark:divide-gray-600"
                       role="menu"
                       id="dropdown-user"
                       aria-orientation="vertical"
@@ -106,10 +106,10 @@ const Sidebar = () => {
                     >
                       <div className="px-4 py-3" role="none">
                         <p
-                          className="text-md font-medium text-gray-900 dark:text-white"
+                          className="text-sm text-gray-900 dark:text-white"
                           role="none"
                         >
-                          {userData.username} ({userData.role})
+                          {userData.username}
                         </p>
                         <p
                           className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
@@ -120,23 +120,22 @@ const Sidebar = () => {
                       </div>
                       <ul className="py-1" role="none">
                         <li>
-                          <Link
-                            to={"/profile"}
+                          <a
+                            href="#"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                             role="menuitem"
                           >
                             Settings
-                          </Link>
+                          </a>
                         </li>
                         <li>
-                          <Link
-                            to={"/"}
-                            onClick={() => Cookies.remove("token")}
+                          <a
+                            href="#"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                             role="menuitem"
                           >
                             Sign out
-                          </Link>
+                          </a>
                         </li>
                       </ul>
                     </div>
@@ -187,7 +186,7 @@ const Sidebar = () => {
                     <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap text-xl">
-                    Menu
+                    Menu kasir
                   </span>
                 </Link>
               </li>
@@ -221,4 +220,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarKasir;

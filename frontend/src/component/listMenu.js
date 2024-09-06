@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Popup from "./popup";
 import axios from "axios";
+import PopupUpdateMenu from "./popupUpdateMenu";
 
 const ListMenu = () => {
-  const [showPopup, setShowPopup] = useState(false);
+  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null); // for the menu being edited
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
+  const toggleAddPopup = () => {
+    setShowAddPopup(!showAddPopup);
+  };
+
+  const toggleEditPopup = (menu) => {
+    setSelectedMenu(menu); // Set the selected menu for editing
+    setShowEditPopup(!showEditPopup);
   };
 
   const [data, setData] = useState(null);
@@ -57,27 +65,42 @@ const ListMenu = () => {
             </thead>
             <tbody>
               {data !== null &&
-                data.map((data, index) => (
-                  <tr className=" border-b dark:bg-gray-800 dark:border-gray-700">
+                data.map((menu, index) => (
+                  <tr
+                    className="border-b dark:bg-gray-800 dark:border-gray-700"
+                    key={index}
+                  >
                     <th
                       scope="row"
                       className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      <button className="mx-4">
-                        <img src="./img/editMenuButton.png" className="w-6" />
-                      </button>
+                      <div>
+                        <button
+                          className="mx-4"
+                          onClick={() => toggleEditPopup(menu)}
+                        >
+                          <img src="./img/editMenuButton.png" className="w-6" />
+                        </button>
+                        {selectedMenu && (
+                          <PopupUpdateMenu
+                            menuId={selectedMenu} // Pass the selected menu for editing
+                            show={showEditPopup}
+                            onClose={toggleEditPopup}
+                          />
+                        )}
+                      </div>
                       <img
-                        src={data.imageURL}
+                        src={menu.imageURL}
                         alt="gambar menu"
                         className="w-16 h-16 rounded-md mr-4"
                       />
-                      {data.name}
+                      {menu.name}
                     </th>
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {formatRupiah(data.amount, "Rp ")}
+                      {formatRupiah(menu.amount, "Rp ")}
                     </td>
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {data.quantity}
+                      {menu.quantity}
                     </td>
                   </tr>
                 ))}
@@ -85,15 +108,16 @@ const ListMenu = () => {
           </table>
         </div>
       </div>
+
       <div className="flex w-full justify-start">
         <button
           type="button"
-          onClick={togglePopup}
-          class="text-white ml-64 my-10 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
+          onClick={toggleAddPopup}
+          className="text-white ml-64 my-10 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
         >
           Tambah Data Menu
         </button>
-        <Popup show={showPopup} onClose={togglePopup} />
+        <Popup show={showAddPopup} onClose={toggleAddPopup} />
       </div>
     </>
   );
