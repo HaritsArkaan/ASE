@@ -28,8 +28,12 @@ const Popup = ({ show, onClose }) => {
     event.preventDefault();
 
     let { Photo, Name, Amount, Quantity, Tenant } = input;
+
+    // Use the default photo URL if no photo is uploaded
+    const defaultPhotoURL =
+      "https://static.vecteezy.com/system/resources/previews/023/658/427/original/plate-fork-and-spoon-icon-cutlery-symbol-flat-illustration-vector.jpg";
     const formData = new FormData();
-    formData.append("Photo", Photo);
+    formData.append("Photo", Photo || defaultPhotoURL);
     formData.append("Name", Name);
     formData.append("Amount", Amount);
     formData.append("Quantity", Quantity);
@@ -87,26 +91,6 @@ const Popup = ({ show, onClose }) => {
       .catch((err) => {
         console.log(err);
       });
-  };
-
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const handleFileChange = (event) => {
-    // const file = event.target.files[0];
-    // const reader = new FileReader();
-    // console.log(file);
-    // reader.onloadend = () => {
-    //   const base64String = reader.result.replace(/^data:.+;base64,/, "");
-    //   setInput((prevInput) => ({ ...prevInput, photo: base64String }));
-    // };
-    // reader.readAsDataURL(file);
-    // console.log(file);
-    setSelectedFile(event.target.files[0]);
-  };
-  const [image, setImage] = useState("");
-  const handleImage = (e) => {
-    console.log(e.target.files[0]);
-    setImage(e.target.files[0]);
   };
 
   if (!show) return null;

@@ -2,19 +2,45 @@ import React, { useState, useEffect } from "react";
 import Popup from "./popup";
 import axios from "axios";
 import PopupUpdateMenu from "./popupUpdateMenu";
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const ListMenu = () => {
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null); // for the menu being edited
 
+  const getRole = () => {
+    const decode = jwtDecode(Cookies.get("token"));
+
+    console.log(decode.role);
+    return decode.role;
+  };
+
   const toggleAddPopup = () => {
-    setShowAddPopup(!showAddPopup);
+    if (getRole() !== "Tenant") {
+      Swal.fire({
+        icon: "error",
+        title: "You're not authorized!",
+        text: "Please login as a tenant o add a menu.",
+      });
+    } else {
+      setShowAddPopup(!showAddPopup);
+    }
   };
 
   const toggleEditPopup = (menu) => {
-    setSelectedMenu(menu); // Set the selected menu for editing
-    setShowEditPopup(!showEditPopup);
+    if (getRole() !== "Tenant") {
+      Swal.fire({
+        icon: "error",
+        title: "You're not authorized!",
+        text: "Please login as a tenant to edit a menu.",
+      });
+    } else {
+      setSelectedMenu(menu); // Set the selected menu for editing
+      setShowEditPopup(!showEditPopup);
+    }
   };
 
   const [data, setData] = useState(null);

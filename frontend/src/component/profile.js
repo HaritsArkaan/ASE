@@ -26,7 +26,7 @@ const Profile = () => {
   return (
     <div className="flex flex-col items-center justify-center ml-64 mt-16">
       <img
-        className="w-48 h-48 rounded-full object-cover shadow-2xl"
+        className="w-48 h-48 rounded-full border-2 object-cover shadow-2xl"
         src={userData.imageURL}
         alt="user photo"
       />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 const TambahOrder = ({ show, onClose }) => {
   const [menus, setMenus] = useState(null);
@@ -114,7 +115,12 @@ const TambahOrder = ({ show, onClose }) => {
 
       const result = await response.json();
       console.log(result);
-      alert("Order added successfully!");
+      Swal.fire({
+        title: "Your order has been added!",
+        icon: "success",
+      });
+
+      onClose();
     } catch (error) {
       console.error("Error adding order:", error);
       alert("Failed to add order.");
@@ -165,19 +171,7 @@ const TambahOrder = ({ show, onClose }) => {
               required
             />
           </div>
-          {/* <div className="mb-4">
-            <label className="block font-semibold text-gray-700 mb-2">
-              Amount
-            </label>
-            <input
-              type="number"
-              name="amount"
-              value={input.amount}
-              oncha
-              required
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div> */}
+
           <button
             type="submit"
             className="bg-blue-500 font-bold text-white py-2 px-4 rounded"
