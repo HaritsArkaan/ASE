@@ -83,7 +83,7 @@ func GetIdByMenu(c *gin.Context) {
 // @Description Creating a new Menu.
 // @Tags Menu
 // @Accept multipart/form-data
-// @Param Photo formData file true "Photo menu"
+// @Param Photo formData file false "Photo menu"
 // @Param Name formData string true "Nama Menu"
 // @Param Amount formData int true "Amount"
 // @Param Tenant formData string true "Nama Tenant"
