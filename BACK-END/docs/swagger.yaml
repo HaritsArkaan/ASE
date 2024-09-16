@@ -212,7 +212,6 @@ paths:
       - description: Photo menu
         in: formData
         name: Photo
-        required: true
         type: file
       - description: Nama Menu
         in: formData

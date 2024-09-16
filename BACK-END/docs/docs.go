@@ -204,8 +204,7 @@ const docTemplate = `{
                         "type": "file",
                         "description": "Photo menu",
                         "name": "Photo",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
