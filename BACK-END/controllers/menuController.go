@@ -93,41 +93,67 @@ func GetIdByMenu(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} models.Menu
 // @Router /menus [post]
+// CreateMenu godoc
+// @Summary Create New Menu.
+// @Description Creating a new Menu.
+// @Tags Menu
+// @Accept multipart/form-data
+// @Param Photo formData file false "Photo menu"
+// @Param Name formData string true "Nama Menu"
+// @Param Amount formData int true "Amount"
+// @Param Tenant formData string true "Nama Tenant"
+// @Param Quantity formData int true "Quantity"
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Security BearerToken
+// @Produce json
+// @Success 200 {object} models.Menu
+// @Router /menus [post]
 func CreateMenu(c *gin.Context) {
-	// Get the file from the form data
-	file, err := c.FormFile("Photo")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    // Define default photo URL
+    defaultPhotoURL := "https://static.vecteezy.com/system/resources/previews/023/658/427/original/plate-fork-and-spoon-icon-cutlery-symbol-flat-illustration-vector.jpg"
 
-	// Define the path where the file will be saved, using UUID for uniqueness
-	fileName := uuid.New().String() + filepath.Ext(file.Filename)
-	filePath := filepath.Join("Storage_Photo", fileName)
+    // Get the file from the form data (optional)
+    file, err := c.FormFile("Photo")
+    
+    var fileName string
+    if err != nil {
+        // If no photo is uploaded, use the default photo URL
+        fileName = defaultPhotoURL
+    } else {
+        // Define the path where the file will be saved, using UUID for uniqueness
+        fileName = uuid.New().String() + filepath.Ext(file.Filename)
+        filePath := filepath.Join("Storage_Photo", fileName)
 
-	// Validate input data using struct tags
-	var menu models.Menu
-	menu.Name = c.PostForm("Name")
-	Amount, _ := strconv.Atoi(c.PostForm("Amount"))
-	menu.Amount = Amount
-	menu.Tenant = c.PostForm("Tenant")
-	Quantity, _ := strconv.Atoi(c.PostForm("Quantity"))
-	menu.Quantity = Quantity
+        // Save the file to the defined path
+        if err := c.SaveUploadedFile(file, filePath); err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+            return
+        }
+    }
 
-	menu.Photo = fileName
-	menu.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
+    // Validate input data using struct tags
+    var menu models.Menu
+    menu.Name = c.PostForm("Name")
+    Amount, _ := strconv.Atoi(c.PostForm("Amount"))
+    menu.Amount = Amount
+    menu.Tenant = c.PostForm("Tenant")
+    Quantity, _ := strconv.Atoi(c.PostForm("Quantity"))
+    menu.Quantity = Quantity
 
-	// Save the file to the defined path
-	if err := c.SaveUploadedFile(file, filePath); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
-		return
-	}
+    menu.Photo = fileName
+    // If no photo was uploaded, set ImageURL to default photo URL
+    if fileName == defaultPhotoURL {
+        menu.ImageURL = defaultPhotoURL
+    } else {
+        menu.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
+    }
 
-	db := c.MustGet("db").(*gorm.DB)
-	db.Create(&menu)
+    db := c.MustGet("db").(*gorm.DB)
+    db.Create(&menu)
 
-	c.JSON(http.StatusOK, gin.H{"data": menu})
+    c.JSON(http.StatusOK, gin.H{"data": menu})
 }
+
 
 // UpdateMenu godoc
 // @Summary Update Menu.

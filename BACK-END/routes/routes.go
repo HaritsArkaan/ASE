@@ -20,6 +20,11 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	})
 
 	r.Use(middlewares.CorsMiddleware())
+	
+	// Handle preflight OPTIONS request globally
+    r.OPTIONS("/*path", func(c *gin.Context) {
+        c.JSON(200, "OK")
+    })
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 	r.GET("/listUser", controllers.GetAllUser)

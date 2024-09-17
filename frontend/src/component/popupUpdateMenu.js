@@ -47,33 +47,35 @@ const PopupUpdateMenu = ({ show, onClose, menuId }) => {
 
   const handleDelete = (event) => {
     event.preventDefault();
-    // Swal.fire({
-    //   title: "Are you sure?",
-    //   text: "You won't be able to revert this!",
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Yes, delete it!",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    axios
-      .delete(`http://localhost:8080/menus/${menuId.ID}`, {
-        headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.error("Error deleting menu:", err);
-      });
-    // Swal.fire({
-    //   title: "Deleted!",
-    //   text: "Your file has been deleted.",
-    //   icon: "success",
-    // });
-    // }
-    // });
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:8080/menus/${menuId.ID}`, {
+            headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+          })
+          .then((res) => {
+            Swal.fire({
+              title: "Deleted!",
+              timer: 1500,
+              text: "Your file has been deleted.",
+              icon: "success",
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((err) => {
+            console.error("Error deleting menu:", err);
+          });
+      }
+    });
   };
 
   const popupDelete = () => {
@@ -114,8 +116,13 @@ const PopupUpdateMenu = ({ show, onClose, menuId }) => {
         },
       })
       .then((res) => {
-        alert("Menu Updated");
-        window.location.reload();
+        Swal.fire({
+          title: "Success!",
+          text: "Menu updated successfully.",
+          icon: "success",
+        }).then(() => {
+          window.location.reload();
+        });
       })
       .catch((err) => {
         console.error("Error updating menu:", err);
@@ -125,7 +132,7 @@ const PopupUpdateMenu = ({ show, onClose, menuId }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50  z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
       <div className="bg-white rounded-lg p-8 w-1/2 relative">
         <h2 className="text-blue-500 font-bold text-xl mb-4">Update Menu</h2>
         <button

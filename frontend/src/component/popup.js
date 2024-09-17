@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 const Popup = ({ show, onClose }) => {
   const [input, setInput] = useState({
@@ -48,8 +49,13 @@ const Popup = ({ show, onClose }) => {
           },
         })
         .then((res) => {
-          alert("Menu Added");
-          window.location.reload();
+          Swal.fire({
+            title: "Your menu has been added!",
+            icon: "success",
+          }).then(() => {
+            // Refresh the page after SweetAlert confirmation
+            window.location.reload();
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -63,8 +69,14 @@ const Popup = ({ show, onClose }) => {
           },
         })
         .then((res) => {
-          alert("Menu Updated");
-          window.location.reload();
+          Swal.fire({
+            title: "Menu Updated",
+            icon: "success",
+            timer: 1500,
+          }).then(() => {
+            // Refresh the page after SweetAlert confirmation
+            window.location.reload();
+          });
         })
         .catch((err) => {
           console.log(err);
