@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 const TambahOrder = ({ show, onClose }) => {
   const [menus, setMenus] = useState(null);
+  const [user, setUser] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [input, setInput] = useState({
     menu_name: "",
@@ -30,6 +31,15 @@ const TambahOrder = ({ show, onClose }) => {
   const handleInput = (event) => {
     const { name, value } = event.target;
     setInput({ ...input, [name]: value });
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/listUser");
+      setUser(response.data.data);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
   };
 
   // Handle form submission

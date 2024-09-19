@@ -83,7 +83,7 @@ func Login(c *gin.Context) {
 // @Router /register [post]
 func Register(c *gin.Context) {
 	// Define default photo URL
-	defaultPhotoURL := "http://localhost:8080/Default_Photo/Default.png"
+	defaultPhotoURL := "http://localhost:8080/Default_Photo/pfp.jpeg"
 
 	// Get the file from the form data
 	file, err := c.FormFile("Pfp")

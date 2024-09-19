@@ -109,16 +109,16 @@ func GetIdByMenu(c *gin.Context) {
 // @Success 200 {object} models.Menu
 // @Router /menus [post]
 func CreateMenu(c *gin.Context) {
+	var fileName string
 	// Define default photo URL
-	defaultPhotoURL := "http://localhost:8080/Default_Photo/Default.png"
+	// defaultPhotoURL := "http://localhost:8080/Default_Photo/default.png"
 
 	// Get the file from the form data (optional)
 	file, err := c.FormFile("Photo")
 
-	var fileName string
 	if err != nil {
 		// If no photo is uploaded, use the default photo URL
-		fileName = defaultPhotoURL
+		fileName = "default.png"
 	} else {
 		// Define the path where the file will be saved, using UUID for uniqueness
 		fileName = uuid.New().String() + filepath.Ext(file.Filename)
@@ -142,11 +142,12 @@ func CreateMenu(c *gin.Context) {
 
 	menu.Photo = fileName
 	// If no photo was uploaded, set ImageURL to default photo URL
-	if fileName == defaultPhotoURL {
-		menu.ImageURL = defaultPhotoURL
+	if fileName == "default.png" {
+    	menu.ImageURL = "http://localhost:8080/Default_Photo/default.png"
 	} else {
-		menu.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
+    	menu.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
 	}
+
 
 	db := c.MustGet("db").(*gorm.DB)
 	db.Create(&menu)
@@ -207,7 +208,7 @@ func UpdateMenu(c *gin.Context) {
 		}
 
 		// Remove old file if it's not the default photo
-		if menu.Photo != "http://localhost:8080/Default_Photo/Default.png" {
+		if menu.Photo != "http://localhost:8080/Default_Photo/default.png" {
 			oldFilePath := filepath.Join("Storage_Photo", menu.Photo)
 			if err := os.Remove(oldFilePath); err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove old file", "Photo": menu})
@@ -254,7 +255,7 @@ func DeleteMenu(ctx *gin.Context) {
 	filePath := filepath.Join("Storage_Photo", menu.Photo)
 
 	// Check if the file exists and it's not the default photo
-	if menu.Photo != "Default_Photo/Default.png" {
+	if menu.Photo != "Default_Photo/default.png" {
 		if _, err := os.Stat(filePath); err == nil {
 			// Delete file
 			if err := os.Remove(filePath); err != nil {

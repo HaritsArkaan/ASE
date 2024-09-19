@@ -30,11 +30,9 @@ const Popup = ({ show, onClose }) => {
 
     let { Photo, Name, Amount, Quantity, Tenant } = input;
 
-    // Use the default photo URL if no photo is uploaded
-    const defaultPhotoURL =
-      "https://static.vecteezy.com/system/resources/previews/023/658/427/original/plate-fork-and-spoon-icon-cutlery-symbol-flat-illustration-vector.jpg";
+    // Use the default photo URL if no photo is uploade
     const formData = new FormData();
-    formData.append("Photo", Photo || defaultPhotoURL);
+    formData.append("Photo", Photo);
     formData.append("Name", Name);
     formData.append("Amount", Amount);
     formData.append("Quantity", Quantity);

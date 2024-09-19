@@ -76,23 +76,27 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // Fetch orders, menus, and users
     const fetchData = async () => {
-      try {
-        const ordersRes = await axios.get("http://localhost:8080/order");
-        const menusRes = await axios.get("http://localhost:8080/menus");
-        const usersRes = await axios.get("http://localhost:8080/listUser");
+      if (fetchStatus) {
+        try {
+          const ordersRes = await axios.get("http://localhost:8080/order");
+          const menusRes = await axios.get("http://localhost:8080/menus");
+          const usersRes = await axios.get("http://localhost:8080/listUser");
 
-        setOrders(ordersRes.data.data);
-        setMenus(menusRes.data.data);
-        setUsers(usersRes.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+          setOrders(ordersRes.data.data);
+          setMenus(menusRes.data.data);
+          setUsers(usersRes.data.data);
+
+          // Reset fetch status to avoid refetching in a loop
+          setFetchStatus(false);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
 
     fetchData();
-  }, [[fetchStatus, setFetchStatus]]);
+  }, [fetchStatus]);
 
   return (
     <>

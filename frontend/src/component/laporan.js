@@ -133,7 +133,7 @@ const Laporan = () => {
                     <td className="px-6 py-4">{item.pesanan}</td>
                     <td className="px-6 py-4">{item.metode_pembayaran}</td>
                     <td className="px-6 py-4">{item.total}</td>
-                    <td className="px-6 py-4">{item.tanggal_pesanan}</td>
+                    <td className="px-6 py-4">{item.created_at}</td>
                   </tr>
                 ))
               ) : (
