@@ -561,7 +561,6 @@ paths:
       - description: Pfp
         in: formData
         name: Pfp
-        required: true
         type: file
       produces:
       - application/json

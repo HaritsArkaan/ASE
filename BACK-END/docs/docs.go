@@ -726,8 +726,7 @@ const docTemplate = `{
                         "type": "file",
                         "description": "Pfp",
                         "name": "Pfp",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     }
                 ],
                 "responses": {

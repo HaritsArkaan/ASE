@@ -77,7 +77,7 @@ func Login(c *gin.Context) {
 // @Param Email formData string true "Email"
 // @Param Password formData string true "Password"
 // @Param Role formData string true "Role"
-// @Param Pfp formData file true "Pfp"
+// @Param Pfp formData file false "Pfp"
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /register [post]
