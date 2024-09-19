@@ -207,8 +207,40 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: Creating a new Menu.
+      - multipart/form-data
+      description: |-
+        Creating a new Menu.
+        Creating a new Menu.
       parameters:
+      - description: Photo menu
+        in: formData
+        name: Photo
+        type: file
+      - description: Nama Menu
+        in: formData
+        name: Name
+        required: true
+        type: string
+      - description: Amount
+        in: formData
+        name: Amount
+        required: true
+        type: integer
+      - description: Nama Tenant
+        in: formData
+        name: Tenant
+        required: true
+        type: string
+      - description: Quantity
+        in: formData
+        name: Quantity
+        required: true
+        type: integer
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Photo menu
         in: formData
         name: Photo
@@ -240,6 +272,7 @@ paths:
         type: string
       produces:
       - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -247,8 +280,10 @@ paths:
             $ref: '#/definitions/models.Menu'
       security:
       - BearerToken: []
+      - BearerToken: []
       summary: Create New Menu.
       tags:
+      - Menu
       - Menu
   /menus/{id}:
     delete:
@@ -289,7 +324,6 @@ paths:
       - description: Photo menu
         in: formData
         name: Photo
-        required: true
         type: file
       - description: Nama Menu
         in: formData

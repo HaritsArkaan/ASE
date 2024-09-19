@@ -82,16 +82,27 @@ func Login(c *gin.Context) {
 // @Success 200 {object} map[string]interface{}
 // @Router /register [post]
 func Register(c *gin.Context) {
+	// Define default photo URL
+	defaultPhotoURL := "http://localhost:8080/Default_Photo/Default.png"
+
 	// Get the file from the form data
 	file, err := c.FormFile("Pfp")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
-	// Define the path where the file will be saved, using UUID for uniqueness
-	fileName := uuid.New().String() + filepath.Ext(file.Filename)
-	filePath := filepath.Join("Storage_Photo", fileName)
+	var fileName string
+	if err != nil {
+		// If no photo is uploaded, use the default photo URL
+		fileName = defaultPhotoURL
+	} else {
+		// Define the path where the file will be saved, using UUID for uniqueness
+		fileName = uuid.New().String() + filepath.Ext(file.Filename)
+		filePath := filepath.Join("Storage_Photo", fileName)
+
+		// Save the file to the defined path
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+			return
+		}
+	}
 
 	// Validate input data using struct tags
 	var user models.User
@@ -101,12 +112,11 @@ func Register(c *gin.Context) {
 	user.Role = c.PostForm("Role")
 
 	user.Pfp = fileName
-	user.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
-
-	// Save the file to the defined path
-	if err := c.SaveUploadedFile(file, filePath); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
-		return
+	// If no photo was uploaded, set ImageURL to default photo URL
+	if fileName == defaultPhotoURL {
+		user.ImageURL = defaultPhotoURL
+	} else {
+		user.ImageURL = fmt.Sprintf("http://localhost:8080/Storage_Photo/%s", fileName)
 	}
 
 	db := c.MustGet("db").(*gorm.DB)

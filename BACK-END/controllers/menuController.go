@@ -160,7 +160,7 @@ func CreateMenu(c *gin.Context) {
 // @Tags Menu
 // @Produce json
 // @Param id path string true "Menu id"
-// @Param Photo formData file true "Photo menu"
+// @Param Photo formData file false "Photo menu"
 // @Param Name formData string true "Nama Menu"
 // @Param Amount formData int true "Amount"
 // @Param Tenant formData string true "Nama Tenant"
@@ -206,11 +206,13 @@ func UpdateMenu(c *gin.Context) {
 			return
 		}
 
-		// Remove old file
-		oldFilePath := filepath.Join("Storage_Photo", menu.Photo)
-		if err := os.Remove(oldFilePath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove old file"})
-			return
+		// Remove old file if it's not the default photo
+		if menu.Photo != "http://localhost:8080/Default_Photo/Default.png" {
+			oldFilePath := filepath.Join("Storage_Photo", menu.Photo)
+			if err := os.Remove(oldFilePath); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove old file", "Photo": menu})
+				return
+			}
 		}
 
 		// Update the thumbnail field in the database
@@ -251,22 +253,15 @@ func DeleteMenu(ctx *gin.Context) {
 	// tentuin file path dari file yg mau didelete
 	filePath := filepath.Join("Storage_Photo", menu.Photo)
 
-	// Check if the file exists
-	_, err := os.Stat(filePath)
-	if os.IsNotExist(err) {
-		// File doesn't exist, still delete the menu from database
-		if err := db.Delete(&menu).Error; err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete news from database"})
-			return
+	// Check if the file exists and it's not the default photo
+	if menu.Photo != "Default_Photo/Default.png" {
+		if _, err := os.Stat(filePath); err == nil {
+			// Delete file
+			if err := os.Remove(filePath); err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete file"})
+				return
+			}
 		}
-		ctx.JSON(http.StatusOK, "Menu deleted successfully")
-		return
-	}
-
-	// Delete file
-	if err := os.Remove(filePath); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete file"})
-		return
 	}
 
 	// Delete menu from database
@@ -275,5 +270,5 @@ func DeleteMenu(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, "Menu deleted successfully")
+	ctx.JSON(http.StatusOK, gin.H{"message": "Menu deleted successfully"})
 }

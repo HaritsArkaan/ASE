@@ -175,20 +175,67 @@
                 "security": [
                     {
                         "BearerToken": []
+                    },
+                    {
+                        "BearerToken": []
                     }
                 ],
-                "description": "Creating a new Menu.",
+                "description": "Creating a new Menu.\nCreating a new Menu.",
                 "consumes": [
+                    "multipart/form-data",
                     "multipart/form-data"
                 ],
                 "produces": [
+                    "application/json",
                     "application/json"
                 ],
                 "tags": [
+                    "Menu",
                     "Menu"
                 ],
                 "summary": "Create New Menu.",
                 "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Photo menu",
+                        "name": "Photo",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nama Menu",
+                        "name": "Name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Amount",
+                        "name": "Amount",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nama Tenant",
+                        "name": "Tenant",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Quantity",
+                        "name": "Quantity",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "file",
                         "description": "Photo menu",
@@ -368,8 +415,7 @@
                         "type": "file",
                         "description": "Photo menu",
                         "name": "Photo",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
