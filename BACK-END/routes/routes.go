@@ -20,11 +20,11 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	})
 
 	r.Use(middlewares.CorsMiddleware())
-	
+
 	// Handle preflight OPTIONS request globally
-    r.OPTIONS("/*path", func(c *gin.Context) {
-        c.JSON(200, "OK")
-    })
+	r.OPTIONS("/*path", func(c *gin.Context) {
+		c.JSON(200, "OK")
+	})
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 	r.GET("/listUser", controllers.GetAllUser)
@@ -55,5 +55,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Static("/Storage_Photo", "./Storage_Photo")
+	r.Static("/Default_Photo", "./Default_Photo")
 	return r
 }
