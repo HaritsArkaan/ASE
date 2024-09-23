@@ -100,7 +100,7 @@ const Laporan = () => {
                   ID Pesanan
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Kode Tenant
+                  Tenant
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Pesanan
