@@ -133,7 +133,9 @@ const Laporan = () => {
                     <td className="px-6 py-4">{item.pesanan}</td>
                     <td className="px-6 py-4">{item.metode_pembayaran}</td>
                     <td className="px-6 py-4">{item.total}</td>
-                    <td className="px-6 py-4">{item.created_at}</td>
+                    <td className="px-6 py-4">
+                      {new Date(item.created_at).toLocaleDateString("id-ID")}
+                    </td>
                   </tr>
                 ))
               ) : (

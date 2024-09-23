@@ -151,7 +151,7 @@ const Signup = () => {
                   >
                     Role
                   </label>
-                  <input
+                  {/* <input
                     type="text"
                     name="Role"
                     id="Role"
@@ -159,7 +159,19 @@ const Signup = () => {
                     onChange={handleInput}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
-                  />
+                  /> */}
+                  <select
+                    name="Role"
+                    id="Role"
+                    value={input.Role}
+                    onChange={handleInput}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required
+                  >
+                    <option value="">Pilih role</option>
+                    <option value="Kasir">Kasir</option>
+                    <option value="Tenant">Tenant</option>
+                  </select>
                 </div>
               </div>
 

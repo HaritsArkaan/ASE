@@ -12,7 +12,7 @@ const Export = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold my-4">Export Laporan Penjualan</h1>
+      <h1 className="text-2xl font-bold my-4">Laporan Penjualan</h1>
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left bg-gray-100 rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
@@ -54,7 +54,9 @@ const Export = () => {
                   <td className="px-6 py-4">{item.pesanan}</td>
                   <td className="px-6 py-4">{item.metode_pembayaran}</td>
                   <td className="px-6 py-4">{item.total}</td>
-                  <td className="px-6 py-4">{item.tanggal_pesanan}</td>
+                  <td className="px-6 py-4">
+                    {new Date(item.created_at).toLocaleDateString("id-ID")}
+                  </td>
                 </tr>
               ))
             ) : (
