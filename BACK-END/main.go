@@ -6,6 +6,7 @@ import (
 	"ASE/BACK-END/routes"
 	"ASE/BACK-END/utils"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -42,7 +43,12 @@ func main() {
 	sqlDB, _ := db.DB()
 	defer sqlDB.Close()
 
+	port := os.Getenv("HTTP_PLATFORM_PORT")
+
+	if port == "" {
+		port = "8080"
+	}
 	// router
 	r := routes.SetupRouter(db)
-	r.Run("localhost:8080")
+	r.Run("localhost:" + port)
 }
